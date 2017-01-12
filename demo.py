@@ -395,11 +395,9 @@ def main():
         boundingboxes, points = detect_face(img_copy, minsize, PNet, RNet, ONet, threshold, False, factor)
 
         img = draw_boxes(img, boundingboxes)
-        print "Took exactly", time.time()-start_t
+        print "Took exactly", time.time()-start_t, 'seconds'
         cv2.imshow('img', img)
-        ch = cv2.waitKey(0) & 0xFF
-        if ch == 27:
-            break
+        cv2.waitKey(0)
     f.close()
 
 if __name__ == "__main__":

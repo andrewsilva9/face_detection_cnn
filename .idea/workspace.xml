@@ -2,22 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0c7865e2-8e42-4b9e-98a2-1471bd30c523" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces10.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces11.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces12.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces3.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces4.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces5.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces6.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces7.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces8.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/faces9.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test2.jpg" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/demo.py" afterPath="$PROJECT_DIR$/demo.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/img_list.txt" afterPath="$PROJECT_DIR$/img_list.txt" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,8 +21,8 @@
       <file leaf-file-name="demo.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/demo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-511">
-              <caret line="307" column="12" lean-forward="true" selection-start-line="307" selection-start-column="12" selection-end-line="307" selection-end-column="12" />
+            <state relative-caret-position="787">
+              <caret line="399" column="8" lean-forward="false" selection-start-line="399" selection-start-column="8" selection-end-line="399" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -277,7 +263,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
@@ -301,8 +287,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/demo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-511">
-          <caret line="307" column="12" lean-forward="true" selection-start-line="307" selection-start-column="12" selection-end-line="307" selection-end-column="12" />
+        <state relative-caret-position="787">
+          <caret line="399" column="8" lean-forward="false" selection-start-line="399" selection-start-column="8" selection-end-line="399" selection-end-column="8" />
           <folding />
         </state>
       </provider>
