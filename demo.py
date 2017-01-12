@@ -295,7 +295,7 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
 
             tempimg = np.zeros((numbox, 48, 48, 3))
             for k in range(numbox):
-                tmp = np.zeros((tmph[k], tmpw[k],3))
+                tmp = np.zeros((tmph[k], tmpw[k], 3))
                 tmp[dy[k]:edy[k]+1, dx[k]:edx[k]+1] = img[y[k]:ey[k]+1, x[k]:ex[k]+1]
                 tempimg[k, :, :, :] = cv2.resize(tmp, (48, 48))
             tempimg = 2 * tempimg/255 - 1
