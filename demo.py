@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-caffe_root = '/Users/andrewsilva/caffe/python'
-sys.path.append(caffe_root)
-import caffe
 import cv2
 import numpy as np
 import time
+caffe_root = '/Users/andrewsilva/caffe/python'
+sys.path.append(caffe_root)
+import caffe
+
 
 def bbreg(boundingbox, reg):
     reg = reg.T
-    # calibrate bouding boxes
+    # calibrate bounding boxes
     if reg.shape[1] == 1:
         print "reshape of reg"
         pass
@@ -21,7 +22,7 @@ def bbreg(boundingbox, reg):
     bb1 = boundingbox[:, 1] + reg[:, 1]*h
     bb2 = boundingbox[:, 2] + reg[:, 2]*w
     bb3 = boundingbox[:, 3] + reg[:, 3]*h
-    
+
     boundingbox[:, 0:4] = np.array([bb0, bb1, bb2, bb3]).T
     return boundingbox
 
@@ -35,7 +36,7 @@ def pad(boxesA, w, h):
 
     dx = np.ones(numbox)
     dy = np.ones(numbox)
-    edx = tmpw 
+    edx = tmpw
     edy = tmph
 
     x = boxes[:, 0:1][:, 0]
@@ -62,7 +63,7 @@ def pad(boxesA, w, h):
     if tmp.shape[0] != 0:
         dy[tmp] = 2 - y[tmp]
         y[tmp] = np.ones_like(y[tmp])
-    
+
     # for python index from 0, while matlab from 1
     dy = np.maximum(0, dy-1)
     dx = np.maximum(0, dx-1)
@@ -105,7 +106,7 @@ def nms(boxes, threshold, type):
     area = np.multiply(x2-x1+1, y2-y1+1)
     # read 's' using 'I'
     I = np.array(s.argsort())
-    
+
     pick = []
     while len(I) > 0:
         xx1 = np.maximum(x1[I[-1]], x1[I[0:-1]])
@@ -154,12 +155,12 @@ def generate_bounding_box(map, reg, scale, t):
 
 
 def draw_boxes(im, boxes):
-    x1 = boxes[:,0]
-    y1 = boxes[:,1]
-    x2 = boxes[:,2]
-    y2 = boxes[:,3]
+    x1 = boxes[:, 0]
+    y1 = boxes[:, 1]
+    x2 = boxes[:, 2]
+    y2 = boxes[:, 3]
     for i in range(x1.shape[0]):
-        cv2.rectangle(im, (int(x1[i]), int(y1[i])), (int(x2[i]), int(y2[i])), (0,255,0), 1)
+        cv2.rectangle(im, (int(x1[i]), int(y1[i])), (int(x2[i]), int(y2[i])), (0, 255, 0), 1)
     return im
 
 
@@ -212,18 +213,12 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
         if boxes.shape[0] != 0:
             total_boxes = np.concatenate((total_boxes, boxes), axis=0)
 
-    #####
-    # 1 #
-    #####
-    print "[1]:", total_boxes.shape[0]
-
     numbox = total_boxes.shape[0]
     if numbox > 0:
         # nms
         pick = nms(total_boxes, 0.7, 'Union')
         total_boxes = total_boxes[pick, :]
-        print "[2]:", total_boxes.shape[0]
-        
+
         # revise and convert to square
         regh = total_boxes[:, 3] - total_boxes[:, 1]
         regw = total_boxes[:, 2] - total_boxes[:, 0]
@@ -234,11 +229,10 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
         t5 = total_boxes[:, 4]
         total_boxes = np.array([t1, t2, t3, t4, t5]).T
 
-        total_boxes = rerec(total_boxes) # convert box to square
-        print "[4]:", total_boxes.shape[0]
-        
+        # convert box to square
+        total_boxes = rerec(total_boxes)
+
         total_boxes[:, 0:4] = np.fix(total_boxes[:, 0:4])
-        print "[4.5]:", total_boxes.shape[0]
         [dy, edy, dx, edx, y, ey, x, ex, tmpw, tmph] = pad(total_boxes, w, h)
 
     numbox = total_boxes.shape[0]
@@ -268,23 +262,14 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
 
         score = np.array([score[pass_t]]).T
         total_boxes = np.concatenate((total_boxes[pass_t, 0:4], score), axis=1)
-        print "[5]:", total_boxes.shape[0]
 
         mv = out['conv5-2'][pass_t, :].T
         if total_boxes.shape[0] > 0:
             pick = nms(total_boxes, 0.7, 'Union')
             if len(pick) > 0:
                 total_boxes = total_boxes[pick, :]
-                print "[6]:", total_boxes.shape[0]
                 total_boxes = bbreg(total_boxes, mv[:, pick])
-                print "[7]:", total_boxes.shape[0]
                 total_boxes = rerec(total_boxes)
-                print "[8]:", total_boxes.shape[0]
-            
-        #####
-        # 2 #
-        #####
-        print "2:", total_boxes.shape
 
         numbox = total_boxes.shape[0]
         if numbox > 0:
@@ -308,95 +293,68 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
             
             score = out['prob1'][:, 1]
             points = out['conv6-3']
-            pass_t = np.where(score>threshold[2])[0]
+            pass_t = np.where(score > threshold[2])[0]
             points = points[pass_t, :]
             score = np.array([score[pass_t]]).T
-            total_boxes = np.concatenate( (total_boxes[pass_t, 0:4], score), axis=1)
-            print "[9]:", total_boxes.shape[0]
-            
+            total_boxes = np.concatenate((total_boxes[pass_t, 0:4], score), axis=1)
+
             mv = out['conv6-2'][pass_t, :].T
             w = total_boxes[:, 3] - total_boxes[:, 1] + 1
             h = total_boxes[:, 2] - total_boxes[:, 0] + 1
 
-            points[:, 0:5] = np.tile(w, (5, 1)).T * points[:, 0:5] + np.tile(total_boxes[:,0], (5,1)).T - 1
-            points[:, 5:10] = np.tile(h, (5, 1)).T * points[:, 5:10] + np.tile(total_boxes[:,1], (5,1)).T -1
+            points[:, 0:5] = np.tile(w, (5, 1)).T * points[:, 0:5] + np.tile(total_boxes[:, 0], (5, 1)).T - 1
+            points[:, 5:10] = np.tile(h, (5, 1)).T * points[:, 5:10] + np.tile(total_boxes[:, 1], (5, 1)).T - 1
 
             if total_boxes.shape[0] > 0:
                 total_boxes = bbreg(total_boxes, mv[:, :])
-                print "[10]:",total_boxes.shape[0]
                 pick = nms(total_boxes, 0.7, 'Min')
                 
                 if len(pick) > 0:
                     total_boxes = total_boxes[pick, :]
-                    print "[11]:", total_boxes.shape[0]
                     points = points[pick, :]
-
-    #####
-    # 3 #
-    #####
-    print "3:", total_boxes.shape
 
     return total_boxes, points
 
 
-def initFaceDetector():
+def init_face_detector():
     minsize = 20
     caffe_model_path = "/Users/andrewsilva/PyCharmProjects/caffe_mutli_view_face_cnn/model"
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
+
     caffe.set_mode_cpu()
+
     PNet = caffe.Net(caffe_model_path+"/det1.prototxt", caffe_model_path+"/det1.caffemodel", caffe.TEST)
     RNet = caffe.Net(caffe_model_path+"/det2.prototxt", caffe_model_path+"/det2.caffemodel", caffe.TEST)
     ONet = caffe.Net(caffe_model_path+"/det3.prototxt", caffe_model_path+"/det3.caffemodel", caffe.TEST)
+
     return minsize, PNet, RNet, ONet, threshold, factor
-
-
-def haveFace(img, facedetector):
-    minsize = facedetector[0]
-    PNet = facedetector[1]
-    RNet = facedetector[2]
-    ONet = facedetector[3]
-    threshold = facedetector[4]
-    factor = facedetector[5]
-    
-    if max(img.shape[0], img.shape[1]) < minsize:
-        return False, []
-
-    img_matlab = img.copy()
-    tmp = img_matlab[:, :, 2].copy()
-    img_matlab[:, :, 2] = img_matlab[:, :, 0]
-    img_matlab[:, :, 0] = tmp
-
-    boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
-    containFace = (True, False)[boundingboxes.shape[0] == 0]
-    return containFace, boundingboxes
 
 
 def main():
     imglistfile = "/Users/andrewsilva/PyCharmProjects/caffe_mutli_view_face_cnn/img_list.txt"
-    minsize = 20
-    caffe_model_path = "./model"
 
-    threshold = [0.6, 0.7, 0.7]
-    factor = 0.709
-    
-    caffe.set_mode_cpu()
-    PNet = caffe.Net(caffe_model_path+"/det1.prototxt", caffe_model_path+"/det1.caffemodel", caffe.TEST)
-    RNet = caffe.Net(caffe_model_path+"/det2.prototxt", caffe_model_path+"/det2.caffemodel", caffe.TEST)
-    ONet = caffe.Net(caffe_model_path+"/det3.prototxt", caffe_model_path+"/det3.caffemodel", caffe.TEST)
+    min_size, p_net, r_net, o_net, threshold, factor = init_face_detector()
 
     f = open(imglistfile, 'r')
+    # cv2.namedWindow("main", cv2.WINDOW_NORMAL)
+    # cv2.resizeWindow("main", 960, 540)
     for img_path in f.readlines():
-        start_t = time.time()
         img_path = img_path.split('\n')[0]
-        print "######\n", img_path
+        print img_path
         img = cv2.imread(img_path)
         img_copy = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        boundingboxes, points = detect_face(img_copy, minsize, PNet, RNet, ONet, threshold, False, factor)
+        start_t = time.time()
+        boundingboxes, points = detect_face(img_copy, min_size, p_net, r_net, o_net, threshold, False, factor)
+        timer = time.time() - start_t
 
         img = draw_boxes(img, boundingboxes)
-        print "Took exactly", time.time()-start_t, 'seconds'
-        cv2.imshow('img', img)
+        print "Took exactly", timer, 'seconds'
+        print "Time per face:", timer / len(boundingboxes), 'seconds'
+        # Scaling images down to see the 1800 ones
+        # new_img = cv2.resize(img, dsize=(960, 540))
+        # cv2.imshow('main', new_img)
+        cv2.imshow('main', img)
         cv2.waitKey(0)
     f.close()
 
