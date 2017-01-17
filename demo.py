@@ -331,6 +331,11 @@ def init_face_detector():
     return minsize, PNet, RNet, ONet, threshold, factor
 
 
+def find_faces(input_image):
+    min_size, p_net, r_net, o_net, threshold, factor = init_face_detector()
+    return detect_face(input_image,  min_size, p_net, r_net, o_net, threshold, False, factor)
+
+
 def main():
     imglistfile = "/Users/andrewsilva/PyCharmProjects/caffe_mutli_view_face_cnn/img_list.txt"
 
