@@ -12,7 +12,7 @@ face_finder = cv2.CascadeClassifier("cascades/haarcascade_frontalface_default.xm
 face_finder2 = cv2.CascadeClassifier("cascades/haarcascade_alt2.xml")
 face_finder3 = cv2.CascadeClassifier("cascades/haarcascade_frontalface_alt.xml")
 face_finder4 = cv2.CascadeClassifier("cascades/haarcascade_frontalface_alt_tree.xml")
-
+eye_finder = cv2.CascadeClassifier("cascades/haarcascade_eye.xml")
 
 def draw_boxes(im, boxes):
 	x1 = boxes[:, 0]
@@ -34,27 +34,37 @@ def run():
 		# find face bounding boxes
 		faces, _ = finder.find_faces(input_image)
 
-		face1 = face_finder.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=10, minSize=(5, 5), flags=cv2.CASCADE_SCALE_IMAGE)
+		# face1 = face_finder.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=10, minSize=(5, 5), flags=cv2.CASCADE_SCALE_IMAGE)
 		# face2 = face_finder2.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=10, minSize=(5, 5), flags=cv2.CASCADE_SCALE_IMAGE)
 		# face3 = face_finder3.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=10, minSize=(5, 5), flags=cv2.CASCADE_SCALE_IMAGE)
 		# face4 = face_finder4.detectMultiScale(frame, scaleFactor=1.1, minNeighbors=10, minSize=(5, 5), flags=cv2.CASCADE_SCALE_IMAGE)
 
 		# Go over detected faces, stop at first detected face, return empty if no face.
-		if len(face1) == 1:
-			face = face1[0]
-		# elif len(face2) == 1:
+		# if len(face1) == 1:
+		# 	face = face1[0]
+		# if len(face2) == 1:
 		# 	face = face2[0]
-		# elif len(face3) == 1:
+		# if len(face3) == 1:
 		# 	face = face3[0]
-		# elif len(face4) == 1:
+		# if len(face4) == 1:
 		# 	face = face4[0]
-		else:
-			face = []
+		# else:
+		# 	face = []
 
-		new_img = draw_boxes(frame, faces)
-		if len(face) > 0:
-			cv2.rectangle(new_img, (int(face[0]), int(face[1])), (int(face[0] + face[2]), int(face[1] + face[3])), (255, 0, 0), 1)
-		cv2.imshow('frame', new_img)
+		# new_img = draw_boxes(frame, faces)
+		for face in faces:
+			x1 = int(face[0])
+			y1 = int(face[1])
+			x2 = int(face[2])
+			y2 = int(face[3])
+			cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+			face_box = frame[y1:y2, x1:x2]
+			eyes = eye_finder.detectMultiScale(face_box)
+			for (ex, ey, ew, eh) in eyes:
+				cv2.rectangle(frame, (x1 + ex, y1 + ey), (x1 + ex + ew, y1 + ey + eh), (255, 0, 0), 2)
+		# if len(face) > 0:
+		# 	cv2.rectangle(new_img, (int(face[0]), int(face[1])), (int(face[0] + face[2]), int(face[1] + face[3])), (255, 0, 0), 1)
+		cv2.imshow('frame', frame)
 
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
